@@ -4,16 +4,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace Midterm.Project;
 
 public class shows_api
 {
     private readonly ILogger<shows_api> _logger;
+    private readonly IConfiguration _config;
     private static readonly List<Show> shows = new();
-    public shows_api(ILogger<shows_api> logger)
+    public shows_api(ILogger<shows_api> logger, IConfiguration config)
     {
         _logger = logger;
+        _config = config;
     }
 
     public class Show
@@ -60,7 +63,7 @@ public class shows_api
 
         //If no show exists, send back error
         if (showToDelete == null)
-            return new NotFoundResult($"No show with id {id}"); 
+            return new NotFoundResult(); 
         shows.Remove(showToDelete); //Removes the show from list
         return new OkObjectResult($"Deleted game with id: {id}");
     }
