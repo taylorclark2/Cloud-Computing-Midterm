@@ -34,12 +34,22 @@ public class shows_api
     [Function("GetShows")] //Returns shows
     public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req)
     {
+        //API Authentication
+        if (!req.Headers.TryGetValue("x-api-key", out var sentApiKey) || sentApiKey.FirstOrDefault() != _config["ApiKey"])
+        {
+            return new UnauthorizedResult(); //Returns error
+        }
         return new OkObjectResult(shows);
     }
 
     [Function("CreateShow")] //Creates a show
     public async Task<IActionResult> Create([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
     {
+        //API Authentication
+        if (!req.Headers.TryGetValue("x-api-key", out var sentApiKey) || sentApiKey.FirstOrDefault() != _config["ApiKey"])
+        {
+            return new UnauthorizedResult(); //Returns error
+        }
         //Takes JSON data and makes into a variable
         string body = await new StreamReader(req.Body).ReadToEndAsync();
         var newShow = JsonSerializer.Deserialize<Show>(body);
@@ -58,6 +68,11 @@ public class shows_api
     [Function("DeleteShow")] //Deletes a show
     public IActionResult Delete([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "shows/{id}")] HttpRequest req, int id)
     {
+        //API Authentication
+        if (!req.Headers.TryGetValue("x-api-key", out var sentApiKey) || sentApiKey.FirstOrDefault() != _config["ApiKey"])
+        {
+            return new UnauthorizedResult(); //Returns error
+        }
         //Checks list of shows with same Id variable
         var showToDelete = shows.FirstOrDefault(s => s.Id == id);
 
@@ -71,8 +86,11 @@ public class shows_api
     [Function("UpdateShow")]
     public async Task<IActionResult> Update([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "shows/{id}")] HttpRequest req, int id)
     {
-
-
+        //API Authentication
+        if (!req.Headers.TryGetValue("x-api-key", out var sentApiKey) || sentApiKey.FirstOrDefault() != _config["ApiKey"])
+        {
+            return new UnauthorizedResult(); //Returns error
+        }
         //Checks list for existing show
         var existingShow = shows.FirstOrDefault(s => s.Id == id);
 
