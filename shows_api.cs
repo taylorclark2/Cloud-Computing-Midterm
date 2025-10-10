@@ -146,12 +146,23 @@ public class shows_api
             return new BadRequestObjectResult("No changes were detected");
 
         //Updates properties of the existing show with the new data
-        existingShow.Title = updatedShowData.Title;
-        existingShow.ShowRunner = updatedShowData.ShowRunner;
-        existingShow.Genre = updatedShowData.Genre;
-        existingShow.ReleaseYear = updatedShowData.ReleaseYear;
-        existingShow.NumberOfSeasons = updatedShowData.NumberOfSeasons;
-        existingShow.Distributor = updatedShowData.Distributor;
+        if (!string.IsNullOrEmpty(updatedShowData.Title))
+            existingShow.Title = updatedShowData.Title;
+
+        if (updatedShowData.ShowRunner != null)
+            existingShow.ShowRunner = updatedShowData.ShowRunner;
+
+        if (updatedShowData.Genre != null)
+            existingShow.Genre = updatedShowData.Genre;
+
+        if (updatedShowData.Distributor != null)
+            existingShow.Distributor = updatedShowData.Distributor;
+
+        if (updatedShowData.NumberOfSeasons != 0)
+            existingShow.NumberOfSeasons = updatedShowData.NumberOfSeasons;
+            
+        if (updatedShowData.Distributor != null)
+            existingShow.Distributor = updatedShowData.Distributor;
 
         return new OkObjectResult(existingShow);
     }
